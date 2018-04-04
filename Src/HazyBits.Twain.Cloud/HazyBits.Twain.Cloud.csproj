@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net452;net46</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Description>TWAIN Cloud client library.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>$(TargetDir)HazyBits.Twain.Cloud.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>HazyBits.Twain.Cloud</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>twain cloud</PackageTags>
+    <PackageProjectUrl>https://github.com/hazy-bits/twain-cloud</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
+    <PackageReference Include="MQTTnet" Version="2.7.3-rc3" />
+  </ItemGroup>
+
+</Project>
