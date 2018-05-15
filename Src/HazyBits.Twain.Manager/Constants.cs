@@ -7,5 +7,7 @@ namespace HazyBits.Twain.Manager
         private const string ApiRootKey = "ApiRoot";
 
         public static string ApiRoot => ConfigurationManager.AppSettings[ApiRootKey];
+
+        public static string LoginUrl => $"{ApiRoot}/authentication/signin/facebook";
     }
 }

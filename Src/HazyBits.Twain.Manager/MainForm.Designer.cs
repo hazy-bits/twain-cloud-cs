@@ -34,35 +34,44 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.loginTabPage = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.registrationTabPage = new System.Windows.Forms.TabPage();
-            this.registerButton = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.localScannersListView = new System.Windows.Forms.ListView();
             this.nameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.manufacturerColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.connectedColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.registerButton = new System.Windows.Forms.Button();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.registeredDevicesComboBox = new System.Windows.Forms.ComboBox();
+            this.connectButton = new System.Windows.Forms.Button();
+            this.loginTabPage = new System.Windows.Forms.TabPage();
+            this.configureButton = new System.Windows.Forms.Button();
+            this.createSessionButton = new System.Windows.Forms.Button();
+            this.cloudScannersListView = new System.Windows.Forms.ListView();
+            this.idHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.nameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.manufactгrerHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.loginButton = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.connectButton = new System.Windows.Forms.Button();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.registrationTabPage.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.loginTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.registrationTabPage.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -122,54 +131,9 @@
             this.tabControl1.Size = new System.Drawing.Size(384, 315);
             this.tabControl1.TabIndex = 0;
             // 
-            // loginTabPage
-            // 
-            this.loginTabPage.Controls.Add(this.groupBox1);
-            this.loginTabPage.Controls.Add(this.pictureBox1);
-            this.loginTabPage.Location = new System.Drawing.Point(4, 22);
-            this.loginTabPage.Name = "loginTabPage";
-            this.loginTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.loginTabPage.Size = new System.Drawing.Size(376, 289);
-            this.loginTabPage.TabIndex = 0;
-            this.loginTabPage.Text = "Application";
-            this.loginTabPage.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.loginButton);
-            this.groupBox1.Location = new System.Drawing.Point(8, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(360, 100);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Login Credentials";
-            // 
-            // loginButton
-            // 
-            this.loginButton.Image = ((System.Drawing.Image)(resources.GetObject("loginButton.Image")));
-            this.loginButton.Location = new System.Drawing.Point(58, 33);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(235, 40);
-            this.loginButton.TabIndex = 1;
-            this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(106, 158);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(169, 69);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // registrationTabPage
             // 
-            this.registrationTabPage.Controls.Add(this.registerButton);
-            this.registrationTabPage.Controls.Add(this.listView1);
+            this.registrationTabPage.Controls.Add(this.groupBox2);
             this.registrationTabPage.Location = new System.Drawing.Point(4, 22);
             this.registrationTabPage.Name = "registrationTabPage";
             this.registrationTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -178,10 +142,49 @@
             this.registrationTabPage.Text = "Registration";
             this.registrationTabPage.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.localScannersListView);
+            this.groupBox2.Controls.Add(this.registerButton);
+            this.groupBox2.Location = new System.Drawing.Point(8, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(360, 277);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Local TWAIN devices";
+            // 
+            // localScannersListView
+            // 
+            this.localScannersListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.localScannersListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.nameColumn,
+            this.manufacturerColumn});
+            this.localScannersListView.Location = new System.Drawing.Point(6, 19);
+            this.localScannersListView.Name = "localScannersListView";
+            this.localScannersListView.Size = new System.Drawing.Size(348, 223);
+            this.localScannersListView.TabIndex = 0;
+            this.localScannersListView.UseCompatibleStateImageBehavior = false;
+            this.localScannersListView.View = System.Windows.Forms.View.Details;
+            // 
+            // nameColumn
+            // 
+            this.nameColumn.Text = "Name";
+            this.nameColumn.Width = 160;
+            // 
+            // manufacturerColumn
+            // 
+            this.manufacturerColumn.Text = "Manufacturer";
+            this.manufacturerColumn.Width = 160;
+            // 
             // registerButton
             // 
             this.registerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.registerButton.Location = new System.Drawing.Point(293, 260);
+            this.registerButton.Location = new System.Drawing.Point(279, 248);
             this.registerButton.Name = "registerButton";
             this.registerButton.Size = new System.Drawing.Size(75, 23);
             this.registerButton.TabIndex = 1;
@@ -189,36 +192,144 @@
             this.registerButton.UseVisualStyleBackColor = true;
             this.registerButton.Click += new System.EventHandler(this.registerButton_Click);
             // 
-            // listView1
+            // tabPage1
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabPage1.Controls.Add(this.pictureBox1);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.registeredDevicesComboBox);
+            this.tabPage1.Controls.Add(this.connectButton);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(376, 289);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Device";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.nameColumn,
-            this.manufacturerColumn,
-            this.connectedColumn});
-            this.listView1.Location = new System.Drawing.Point(6, 6);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(362, 248);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(104, 110);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(169, 69);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
             // 
-            // nameColumn
+            // label1
             // 
-            this.nameColumn.Text = "Name";
-            this.nameColumn.Width = 120;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Registered Device:";
             // 
-            // manufacturerColumn
+            // registeredDevicesComboBox
             // 
-            this.manufacturerColumn.Text = "Manufacturer";
-            this.manufacturerColumn.Width = 120;
+            this.registeredDevicesComboBox.FormattingEnabled = true;
+            this.registeredDevicesComboBox.Location = new System.Drawing.Point(110, 8);
+            this.registeredDevicesComboBox.Name = "registeredDevicesComboBox";
+            this.registeredDevicesComboBox.Size = new System.Drawing.Size(179, 21);
+            this.registeredDevicesComboBox.TabIndex = 3;
+            this.registeredDevicesComboBox.SelectedIndexChanged += new System.EventHandler(this.registeredDevicesComboBox_SelectedIndexChanged);
             // 
-            // connectedColumn
+            // connectButton
             // 
-            this.connectedColumn.Text = "Connected";
-            this.connectedColumn.Width = 110;
+            this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.connectButton.Location = new System.Drawing.Point(295, 6);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(75, 23);
+            this.connectButton.TabIndex = 2;
+            this.connectButton.Text = "Connect";
+            this.connectButton.UseVisualStyleBackColor = true;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click_1);
+            // 
+            // loginTabPage
+            // 
+            this.loginTabPage.Controls.Add(this.configureButton);
+            this.loginTabPage.Controls.Add(this.createSessionButton);
+            this.loginTabPage.Controls.Add(this.cloudScannersListView);
+            this.loginTabPage.Controls.Add(this.groupBox1);
+            this.loginTabPage.Location = new System.Drawing.Point(4, 22);
+            this.loginTabPage.Name = "loginTabPage";
+            this.loginTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.loginTabPage.Size = new System.Drawing.Size(376, 289);
+            this.loginTabPage.TabIndex = 0;
+            this.loginTabPage.Text = "Application";
+            this.loginTabPage.UseVisualStyleBackColor = true;
+            // 
+            // configureButton
+            // 
+            this.configureButton.Location = new System.Drawing.Point(111, 230);
+            this.configureButton.Name = "configureButton";
+            this.configureButton.Size = new System.Drawing.Size(75, 23);
+            this.configureButton.TabIndex = 5;
+            this.configureButton.Text = "Configure";
+            this.configureButton.UseVisualStyleBackColor = true;
+            this.configureButton.Click += new System.EventHandler(this.configureButton_Click);
+            // 
+            // createSessionButton
+            // 
+            this.createSessionButton.Location = new System.Drawing.Point(8, 230);
+            this.createSessionButton.Name = "createSessionButton";
+            this.createSessionButton.Size = new System.Drawing.Size(97, 23);
+            this.createSessionButton.TabIndex = 4;
+            this.createSessionButton.Text = "Create Session";
+            this.createSessionButton.UseVisualStyleBackColor = true;
+            this.createSessionButton.Click += new System.EventHandler(this.createSessionButton_Click);
+            // 
+            // cloudScannersListView
+            // 
+            this.cloudScannersListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.idHeader,
+            this.nameHeader,
+            this.manufactгrerHeader});
+            this.cloudScannersListView.FullRowSelect = true;
+            this.cloudScannersListView.GridLines = true;
+            this.cloudScannersListView.Location = new System.Drawing.Point(8, 81);
+            this.cloudScannersListView.MultiSelect = false;
+            this.cloudScannersListView.Name = "cloudScannersListView";
+            this.cloudScannersListView.Size = new System.Drawing.Size(360, 143);
+            this.cloudScannersListView.TabIndex = 3;
+            this.cloudScannersListView.UseCompatibleStateImageBehavior = false;
+            this.cloudScannersListView.View = System.Windows.Forms.View.Details;
+            // 
+            // idHeader
+            // 
+            this.idHeader.Text = "Id";
+            // 
+            // nameHeader
+            // 
+            this.nameHeader.Text = "Name";
+            this.nameHeader.Width = 160;
+            // 
+            // manufactгrerHeader
+            // 
+            this.manufactгrerHeader.Text = "Manufacturer";
+            this.manufactгrerHeader.Width = 160;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.loginButton);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(360, 69);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Login Credentials";
+            // 
+            // loginButton
+            // 
+            this.loginButton.Image = ((System.Drawing.Image)(resources.GetObject("loginButton.Image")));
+            this.loginButton.Location = new System.Drawing.Point(58, 19);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(235, 40);
+            this.loginButton.TabIndex = 1;
+            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
             // 
             // menuStrip1
             // 
@@ -263,27 +374,6 @@
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.connectButton);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(376, 289);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Device";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // connectButton
-            // 
-            this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButton.Location = new System.Drawing.Point(8, 6);
-            this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(75, 23);
-            this.connectButton.TabIndex = 2;
-            this.connectButton.Text = "Connect";
-            this.connectButton.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,13 +394,15 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.registrationTabPage.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.loginTabPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.registrationTabPage.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -322,7 +414,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage loginTabPage;
         private System.Windows.Forms.Button loginButton;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage registrationTabPage;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -333,12 +424,21 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button registerButton;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView localScannersListView;
         private System.Windows.Forms.ColumnHeader nameColumn;
         private System.Windows.Forms.ColumnHeader manufacturerColumn;
-        private System.Windows.Forms.ColumnHeader connectedColumn;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button connectButton;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox registeredDevicesComboBox;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button configureButton;
+        private System.Windows.Forms.Button createSessionButton;
+        private System.Windows.Forms.ListView cloudScannersListView;
+        private System.Windows.Forms.ColumnHeader nameHeader;
+        private System.Windows.Forms.ColumnHeader manufactгrerHeader;
+        private System.Windows.Forms.ColumnHeader idHeader;
     }
 }
 
