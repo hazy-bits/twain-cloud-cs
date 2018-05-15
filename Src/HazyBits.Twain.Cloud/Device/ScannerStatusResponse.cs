@@ -13,11 +13,11 @@
         /// <summary>
         /// Gets or sets the name of MQTT topic to use for incoming messages.
         /// </summary>
-        public string DeviceTopic { get; set; }
+        public string RequestTopic { get; set; }
 
         /// <summary>
         /// Gets or sets the name of MQTT topic to use for outgoing messages.
         /// </summary>
-        public string CloudTopic { get; set; }
+        public string ResponseTopic { get; set; }
     }
 }

@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <PackageId>HazyBits.Twain.Cloud</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">1.0.0</PackageVersion>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>twain cloud</PackageTags>
     <PackageProjectUrl>https://github.com/hazy-bits/twain-cloud</PackageProjectUrl>
@@ -20,8 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\Common\VersionInfo.cs" Link="VersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
-    <PackageReference Include="MQTTnet" Version="2.7.3-rc3" />
+    <PackageReference Include="MQTTnet" Version="2.7.5" />
   </ItemGroup>
 
 </Project>

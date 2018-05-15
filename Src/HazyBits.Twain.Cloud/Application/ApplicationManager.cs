@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Client;
 using HazyBits.Twain.Cloud.Registration;
@@ -8,7 +9,7 @@ namespace HazyBits.Twain.Cloud.Application
     /// <summary>
     /// Class that handles connection to TWAIN Cloud infrastructure from application side.
     /// </summary>
-    public class ApplicationManager
+    public class ApplicationManager: EventBrokerClient
     {
         #region Private Fields
 
@@ -31,6 +32,18 @@ namespace HazyBits.Twain.Cloud.Application
 
         #region Public Methods
 
+        public async Task Connect()
+        {
+            var userInfo = await GetUserInformation();
+            await base.Connect(userInfo.EventBroker.Url);
+            await base.Subscribe(userInfo.EventBroker.Topic);
+        }
+
+        public async Task<UserInformation> GetUserInformation()
+        {
+            return await _client.Get<UserInformation>("user");
+        }
+
         /// <summary>
         /// Gets the list of scanners registered in the TWAIN Cloud.
         /// </summary>
@@ -50,12 +63,28 @@ namespace HazyBits.Twain.Cloud.Application
             return await _client.Get<ScannerInformation>($"scanners/{scannerId}/privet/infoex");
         }
 
-        /*
-        public async Task<> SendCommand(string scannerId, string command)
+        /// <summary>
+        /// Sends the command to the specified scanner.
+        /// </summary>
+        /// <param name="scannerId">The scanner identifier.</param>
+        /// <param name="command">The command.</param>
+        /// <returns></returns>
+        public async Task SendCommand(string scannerId, string command)
         {
-            return await _client.Post<>($"scanners/{scannerId}/privet/twaindirect/session");
+            await _client.Post<object>($"scanners/{scannerId}/privet/twaindirect/session", command);
         }
-        */
+
+        /// <summary>
+        /// Downloads the block.
+        /// </summary>
+        /// <param name="scannerId">The scanner identifier.</param>
+        /// <param name="blockId">The block identifier.</param>
+        /// <returns></returns>
+        public async Task<byte[]> DownloadBlock(string scannerId, string blockId)
+        {
+            var blockBase64 = await _client.Get<string>($"scanners/{scannerId}/blocks/{blockId}");
+            return Convert.FromBase64String(blockBase64);
+        }
 
         #endregion
     }

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Client;
-using HazyBits.Twain.Cloud.Events;
 
 namespace HazyBits.Twain.Cloud.Device
 {
     /// <summary>
     /// Class that handles connection to TWAIN Cloud infrastructure from device side of things.
     /// </summary>
-    public class DeviceSession
+    public class DeviceSession: EventBrokerClient
     {
         #region Private Fields
 
         private readonly TwainCloudClient _client;
-        private MqttClient _mqttClient;
+        private readonly string _scannerId;
         private string _cloudTopicName;
 
         #endregion
@@ -24,19 +23,11 @@ namespace HazyBits.Twain.Cloud.Device
         /// Initializes a new instance of the <see cref="DeviceSession"/> class.
         /// </summary>
         /// <param name="client">Initialized TWAIN Cloud client.</param>
-        public DeviceSession(TwainCloudClient client)
+        public DeviceSession(TwainCloudClient client, string scannerId)
         {
             _client = client;
+            _scannerId = scannerId;
         }
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// Occurs when asynchronious message from TWAIN Cloud is received.
-        /// </summary>
-        public event EventHandler<string> Received;
 
         #endregion
 
@@ -47,21 +38,13 @@ namespace HazyBits.Twain.Cloud.Device
         /// </summary>
         /// <param name="scannerId">The scanner identifier.</param>
         /// <returns></returns>
-        public async Task Connect(string scannerId)
+        public async Task Connect()
         {
-            var scannerInfo = await _client.Get<ScannerStatusResponse>($"scanners/{scannerId}");
+            var scannerInfo = await _client.Get<ScannerStatusResponse>($"scanners/{_scannerId}");
+            _cloudTopicName = scannerInfo.ResponseTopic;
 
-            _cloudTopicName = scannerInfo.CloudTopic;
-            await ConnectToMqttBroker(scannerInfo.Url, scannerInfo.DeviceTopic);
-        }
-
-        /// <summary>
-        /// Disconnects the session from TWAIN Cloud infrastructure.
-        /// </summary>
-        public void Disconnect()
-        {
-            _mqttClient.Dispose();
-            _mqttClient = null;
+            await base.Connect(scannerInfo.Url);;
+            await base.Subscribe(scannerInfo.RequestTopic);
         }
 
         /// <summary>
@@ -72,10 +55,7 @@ namespace HazyBits.Twain.Cloud.Device
         /// <exception cref="InvalidOperationException">If the session is in disconnected state.</exception>
         public async Task Send(string message)
         {
-            if (_mqttClient == null)
-                throw new InvalidOperationException();
-
-            await _mqttClient.Publish(_cloudTopicName, message);
+            await base.Send(_cloudTopicName, message);
         }
 
         /// <summary>
@@ -83,36 +63,10 @@ namespace HazyBits.Twain.Cloud.Device
         /// </summary>
         /// <param name="data">The data to upload.</param>
         /// <returns>Unique ID of the object stored in the cloud.</returns>
-        public string Upload(byte[] data)
+        public async Task<string> UploadBlock(byte[] data)
         {
-            // TODO: TBD
-            return string.Empty;
-        }
-
-        #endregion
-
-        #region Protected Methods
-
-        /// <summary>
-        /// Raises the <see cref="Received" /> event.
-        /// </summary>
-        /// <param name="message">The received message.</param>
-        protected virtual void OnReceived(string message)
-        {
-            Received?.Invoke(this, message);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private async Task ConnectToMqttBroker(string mqttUrl, string topic)
-        {
-            _mqttClient = new MqttClient(mqttUrl);
-            _mqttClient.MessageReceived += (_, message) => { OnReceived(message.Message); };
-
-            await _mqttClient.Connect();
-            await _mqttClient.Subscribe(topic);
+            var base64 = Convert.ToBase64String(data);
+            return await _client.Post<string>($"scanners/{_scannerId}/blocks", base64);
         }
 
         #endregion
