@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildProjectDirectory)\build.version.props"/>
+
+  <Target Name="UpdateVersion" Condition=" '$(Configuration)' == 'Release' ">
+    <!-- Fetch all AssemblyInfo files -->
+    <CreateItem Include="$(SourcesDirectory)\..\Common\VersionInfo.cs">
+      <Output TaskParameter="Include" ItemName="AssemblyInfoFiles" />
+    </CreateItem>
+
+    <!-- Build the full assebly version. -->
+    <PropertyGroup>
+      <Version>$(MajorVersion).$(MinorVersion).$(ServicePack).$(BuildRevision)</Version>
+      <InformationVersion>$(Version)</InformationVersion>
+    </PropertyGroup>
+    <!-- Clear any read-only attributes on the files. -->
+    <Attrib Files="@(AssemblyInfoFiles)" Normal="true" />
+    <!-- Update AssemblyVersion -->
+    <FileUpdate Files="@(AssemblyInfoFiles)" Regex="AssemblyVersion\(&quot;.*&quot;\)\]" ReplacementText="AssemblyVersion(&quot;$(Version)&quot;)]" />
+    <!-- Update AssemblyFileVersion -->
+    <FileUpdate Files="@(AssemblyInfoFiles)" Regex="AssemblyFileVersion\(&quot;.*&quot;\)\]" ReplacementText="AssemblyFileVersion(&quot;$(Version)&quot;)]" />
+    <!-- Update AssemblyInformationalVersion -->
+    <FileUpdate Files="@(AssemblyInfoFiles)" Regex="AssemblyInformationalVersion\(&quot;.*&quot;\)\]" ReplacementText="AssemblyInformationalVersion(&quot;$(InformationVersion)&quot;)]" />
+  </Target>
+  
+</Project>
