@@ -5,5 +5,7 @@
     <MinorVersion Condition=" '$(MinorVersion)' == '' ">0</MinorVersion>
     <ServicePack Condition=" '$(ServicePack)' == '' ">0</ServicePack>
     <BuildRevision Condition=" '$(BuildRevision)' == '' ">0</BuildRevision>
+
+    <PackageVersion>$(MajorVersion).$(MinorVersion).$(BuildRevision)</PackageVersion>
   </PropertyGroup>
 </Project>

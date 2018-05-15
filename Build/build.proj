@@ -40,5 +40,5 @@
   </Target>  
 
   <Target Name="InstantBuild" DependsOnTargets="UpdateVersion;Build" />
-  <Target Name="NightlyBuild" DependsOnTargets="UpdateVersion;Build;Deploy" />
+  <Target Name="NightlyBuild" DependsOnTargets="UpdateVersion;Build" />
 </Project>
