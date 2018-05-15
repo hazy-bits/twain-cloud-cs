@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazyBits.Twain.Manager", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HazyBits.Twain.Cloud", "HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj", "{66135447-7C50-481A-9959-638C9690F100}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HazyBits.Twain.Cloud.Forms", "HazyBits.Twain.Cloud.Forms\HazyBits.Twain.Cloud.Forms.csproj", "{C93A1BD8-8A9B-4216-A3A4-E838E47B726C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{66135447-7C50-481A-9959-638C9690F100}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66135447-7C50-481A-9959-638C9690F100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66135447-7C50-481A-9959-638C9690F100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93A1BD8-8A9B-4216-A3A4-E838E47B726C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93A1BD8-8A9B-4216-A3A4-E838E47B726C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93A1BD8-8A9B-4216-A3A4-E838E47B726C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93A1BD8-8A9B-4216-A3A4-E838E47B726C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
