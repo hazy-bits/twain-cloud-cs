@@ -6,6 +6,10 @@ using HazyBits.Twain.Cloud.Client;
 
 namespace HazyBits.Twain.Cloud.Forms
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="System.Windows.Forms.Form" />
     public partial class FacebookLoginForm : Form
     {
         public const string AuthorizationTokenName = "authorization_token";
@@ -25,11 +29,13 @@ namespace HazyBits.Twain.Cloud.Forms
             Debug.WriteLine(e.Url.ToString());
 
             var queryParams = HttpUtility.ParseQueryString(e.Url.Query);
-
             var authToken = queryParams[AuthorizationTokenName];
             var refreshToken = queryParams[RefreshTokenName];
 
-            OnAuthorized(new TwainCloudAuthorizedEventArgs(new TwainCloudTokens(authToken, refreshToken)));
+            // There will be several redirects when new user accesses the app.
+            // Make sure we fire Authorized event only when we have both token successfully extracted.
+            if (!string.IsNullOrEmpty(authToken) && !string.IsNullOrEmpty(refreshToken))
+                OnAuthorized(new TwainCloudAuthorizedEventArgs(new TwainCloudTokens(authToken, refreshToken)));
         }
 
         protected virtual void OnAuthorized(TwainCloudAuthorizedEventArgs e)
