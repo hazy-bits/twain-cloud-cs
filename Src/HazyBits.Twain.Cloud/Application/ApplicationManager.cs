@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Client;
 using HazyBits.Twain.Cloud.Registration;
+using HazyBits.Twain.Cloud.Telemetry;
 
 namespace HazyBits.Twain.Cloud.Application
 {
@@ -12,6 +13,8 @@ namespace HazyBits.Twain.Cloud.Application
     public class ApplicationManager: EventBrokerClient
     {
         #region Private Fields
+
+        private static Logger Logger = Logger.GetLogger<ApplicationManager>();
 
         private readonly TwainCloudClient _client;
 
@@ -34,9 +37,13 @@ namespace HazyBits.Twain.Cloud.Application
 
         public async Task Connect()
         {
-            var userInfo = await GetUserInformation();
-            await base.Connect(userInfo.EventBroker.Url);
-            await base.Subscribe(userInfo.EventBroker.Topic);
+            using (Logger.StartActivity("Connecting to cloud infrastructure"))
+            {
+                var userInfo = await GetUserInformation();
+
+                await base.Connect(userInfo.EventBroker.Url);
+                await base.Subscribe(userInfo.EventBroker.Topic);
+            }
         }
 
         public async Task<UserInformation> GetUserInformation()

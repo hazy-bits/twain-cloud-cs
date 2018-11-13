@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
+using HazyBits.Twain.Cloud.Telemetry;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -14,6 +15,8 @@ namespace HazyBits.Twain.Cloud.Client
     public class TwainCloudClient
     {
         #region Static Fields 
+
+        private static Logger Logger = Logger.GetLogger<TwainCloudClient>();
 
         private static readonly JsonSerializerSettings JsonSettings;
         private static readonly JsonMediaTypeFormatter DefaultFormatter;
@@ -122,29 +125,48 @@ namespace HazyBits.Twain.Cloud.Client
 
         private async Task<TResult> ExecuteRequest<TResult>(Func<Task<HttpResponseMessage>> request)
         {
-            var response = await request();
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            using (Logger.StartActivity("Executing TWAIN Cloud request"))
             {
-                var refreshResponse = await _client.GetAsync(GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}"));
-                var tokens = await DeserializeObject<TwainCloudTokens>(refreshResponse);
-                UpdateTokens(tokens);
-                response = await request();
-            }
+                var response = await request();
+                LogRequestMessage(response.RequestMessage);
 
-            return await DeserializeObject<TResult>(response);
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    var refreshResponse = await _client.GetAsync(GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}"));
+                    var tokens = await DeserializeObject<TwainCloudTokens>(refreshResponse);
+                    UpdateTokens(tokens);
+                    response = await request();
+                }
+
+                LogResponseMessage(response);
+                return await DeserializeObject<TResult>(response);
+            }
         }
 
         private void UpdateTokens(TwainCloudTokens tokens)
         {
-            _tokens = tokens;
-
-            if (_tokens?.AuthorizationToken != null)
+            using (Logger.StartActivity("Updating access tokens"))
             {
-                _client.DefaultRequestHeaders.Remove("Authorization");
-                _client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _tokens.AuthorizationToken);
+                _tokens = tokens;
+
+                if (_tokens?.AuthorizationToken != null)
+                {
+                    _client.DefaultRequestHeaders.Remove("Authorization");
+                    _client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", _tokens.AuthorizationToken);
+                }
             }
 
             OnTokensRefreshed(new TokensRefreshedEventArgs { Tokens = _tokens });
+        }
+
+        private static void LogRequestMessage(HttpRequestMessage request)
+        {
+            Logger.LogDebug(request.ToString());
+        }
+
+        private static void LogResponseMessage(HttpResponseMessage response)
+        {
+            Logger.LogDebug(response.ToString());
         }
 
         #endregion

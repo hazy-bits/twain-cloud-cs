@@ -76,7 +76,7 @@ namespace HazyBits.Twain.Manager
             var client = new TwainCloudClient(Constants.ApiRoot);
             var registrationManager = new RegistrationManager(client);
 
-            var scannerInfo = new ScannerInformation
+            var scannerInfo = new RegistrationRequest
             {
                 Name = "Virtual Scanner",
                 Description = "Home Virtual Scanner",

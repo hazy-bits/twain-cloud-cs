@@ -48,8 +48,6 @@ namespace HazyBits.Twain.Cloud.Client
             await _mqttClient.Subscribe(topic);
         }
 
-
-
         #region Protected Methods
 
         /// <summary>

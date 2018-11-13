@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HazyBits.Twain.Cloud.Telemetry;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Diagnostics;
@@ -18,6 +19,7 @@ namespace HazyBits.Twain.Cloud.Events
     {
         #region Private Fields
 
+        private static Logger Logger = Logger.GetLogger<MqttClient>();
         private static readonly Encoding DefaultMessageEncoding = Encoding.UTF8;
 
         private readonly IMqttClient _client;
@@ -42,6 +44,7 @@ namespace HazyBits.Twain.Cloud.Events
                     trace += Environment.NewLine + e.TraceMessage.Exception.ToString();
 
                 Debug.WriteLine(trace);
+                Logger.LogDebug(trace);
             };
 
             #endif
@@ -96,7 +99,7 @@ namespace HazyBits.Twain.Cloud.Events
         {
             _client.Disconnected += async (s, e) =>
             {
-                Debug.WriteLine("### DISCONNECTED FROM SERVER ###");
+                Logger.LogDebug("Disconnected from server");
 
                 // TODO: implement exponential backoff instead.
                 await Task.Delay(TimeSpan.FromSeconds(2)); 
@@ -107,7 +110,7 @@ namespace HazyBits.Twain.Cloud.Events
                 }
                 catch
                 {
-                    Debug.WriteLine("### RECONNECTING FAILED ###");
+                    Logger.LogDebug("Reconnection failed");
                 }
             };
 
@@ -121,9 +124,12 @@ namespace HazyBits.Twain.Cloud.Events
         /// <returns></returns>
         public async Task Subscribe(string topic)
         {
-            // '#' is the wildcard to subscribe to anything under the 'root' topic
-            // the QOS level here - I only partially understand why it has to be this level - it didn't seem to work at anything else.
-            await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topic).Build());
+            using (Logger.StartActivity($"Subscribing to topic: {topic}"))
+            {
+                // '#' is the wildcard to subscribe to anything under the 'root' topic
+                // the QOS level here - I only partially understand why it has to be this level - it didn't seem to work at anything else.
+                await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topic).Build());
+            }
         }
 
         /// <summary>
@@ -134,11 +140,15 @@ namespace HazyBits.Twain.Cloud.Events
         /// <returns></returns>
         public async Task Publish(string topic, string message)
         {
-            await _client.PublishAsync(new MqttApplicationMessage
+            using (Logger.StartActivity($"Publishing a message to topic: {topic}"))
             {
-                Topic = topic,
-                Payload = DefaultMessageEncoding.GetBytes(message)
-            });
+                Logger.LogDebug(message);
+                await _client.PublishAsync(new MqttApplicationMessage
+                {
+                    Topic = topic,
+                    Payload = DefaultMessageEncoding.GetBytes(message)
+                });
+            }
         }
 
         #endregion
@@ -151,7 +161,11 @@ namespace HazyBits.Twain.Cloud.Events
         /// <param name="message">Message payload.</param>
         protected virtual void OnMessageReceived(MqttMessage message)
         {
-            MessageReceived?.Invoke(this, message);
+            using (Logger.StartActivity($"Receiving message from topic: {message.Topic}"))
+            {
+                Logger.LogDebug(message.Message);
+                MessageReceived?.Invoke(this, message);
+            }
         }
 
         #endregion
@@ -160,13 +174,16 @@ namespace HazyBits.Twain.Cloud.Events
 
         private async Task ConnectMqttBroker()
         {
-            // A wild hack to ensure that HTTP connection is not closed.
-            // See https://github.com/chkr1011/MQTTnet/issues/158 for details
+            using (Logger.StartActivity("Connecting to broker"))
+            {
+                // A wild hack to ensure that HTTP connection is not closed.
+                // See https://github.com/chkr1011/MQTTnet/issues/158 for details
 
-            var defaultIdleTime = ServicePointManager.MaxServicePointIdleTime;
-            ServicePointManager.MaxServicePointIdleTime = Timeout.Infinite;
-            await _client.ConnectAsync(_options);
-            ServicePointManager.MaxServicePointIdleTime = defaultIdleTime;
+                var defaultIdleTime = ServicePointManager.MaxServicePointIdleTime;
+                ServicePointManager.MaxServicePointIdleTime = Timeout.Infinite;
+                await _client.ConnectAsync(_options);
+                ServicePointManager.MaxServicePointIdleTime = defaultIdleTime;
+            }
         }
 
         private void MqttMessagePublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)

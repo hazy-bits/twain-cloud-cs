@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Client;
+using HazyBits.Twain.Cloud.Telemetry;
 
 namespace HazyBits.Twain.Cloud.Device
 {
@@ -10,6 +11,8 @@ namespace HazyBits.Twain.Cloud.Device
     public class DeviceSession: EventBrokerClient
     {
         #region Private Fields
+
+        private static Logger Logger = Logger.GetLogger<DeviceSession>();
 
         private readonly TwainCloudClient _client;
         private readonly string _scannerId;
@@ -23,6 +26,7 @@ namespace HazyBits.Twain.Cloud.Device
         /// Initializes a new instance of the <see cref="DeviceSession"/> class.
         /// </summary>
         /// <param name="client">Initialized TWAIN Cloud client.</param>
+        /// <param name="scannerId">Scanner Id.</param>
         public DeviceSession(TwainCloudClient client, string scannerId)
         {
             _client = client;
@@ -40,11 +44,14 @@ namespace HazyBits.Twain.Cloud.Device
         /// <returns></returns>
         public async Task Connect()
         {
-            var scannerInfo = await _client.Get<ScannerStatusResponse>($"scanners/{_scannerId}");
-            _cloudTopicName = scannerInfo.ResponseTopic;
+            using (Logger.StartActivity("Connecting to cloud infrastructure"))
+            {
+                var scannerInfo = await _client.Get<ScannerStatusResponse>($"scanners/{_scannerId}");
+                _cloudTopicName = scannerInfo.ResponseTopic;
 
-            await base.Connect(scannerInfo.Url);;
-            await base.Subscribe(scannerInfo.RequestTopic);
+                await base.Connect(scannerInfo.Url);
+                await base.Subscribe(scannerInfo.RequestTopic);
+            }
         }
 
         /// <summary>
