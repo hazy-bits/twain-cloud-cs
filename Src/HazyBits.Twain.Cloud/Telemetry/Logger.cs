@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using HazyBits.Twain.Cloud.Telemetry.Adapters;
@@ -20,7 +21,7 @@ namespace HazyBits.Twain.Cloud.Telemetry
         protected Logger(Type context)
         {
             Context = context;
-            LoggerAdapters = RegisteredLoggerAdapters.ToList();
+            LoggerAdapters = RegisteredLoggerAdapters;
         }
         
         protected Logger(Type context, IEnumerable<ILoggerAdapter> adapters)
@@ -35,7 +36,7 @@ namespace HazyBits.Twain.Cloud.Telemetry
 
         public static IList<IContextExtender> RegisteredContextExtenders => new List<IContextExtender>();
 
-        public static IList<ILoggerAdapter> RegisteredLoggerAdapters => new List<ILoggerAdapter> { new TraceSourceLoggerAdapter() };
+        public static ConcurrentBag<ILoggerAdapter> RegisteredLoggerAdapters => new ConcurrentBag<ILoggerAdapter> { new TraceSourceLoggerAdapter() };
 
         public Type Context { get; }
 
