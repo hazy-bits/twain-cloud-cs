@@ -34,9 +34,9 @@ namespace HazyBits.Twain.Cloud.Telemetry
 
         #region Properties
 
-        public static IList<IContextExtender> RegisteredContextExtenders => new List<IContextExtender>();
+        public static IList<IContextExtender> RegisteredContextExtenders { get; } = new List<IContextExtender>();
 
-        public static ConcurrentBag<ILoggerAdapter> RegisteredLoggerAdapters => new ConcurrentBag<ILoggerAdapter> { new TraceSourceLoggerAdapter() };
+        public static ConcurrentBag<ILoggerAdapter> RegisteredLoggerAdapters { get; } = new ConcurrentBag<ILoggerAdapter> { new TraceSourceLoggerAdapter() };
 
         public Type Context { get; }
 
