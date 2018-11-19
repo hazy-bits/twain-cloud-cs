@@ -16,7 +16,7 @@ namespace HazyBits.Twain.Cloud.Client
     {
         #region Static Fields 
 
-        private static Logger Logger = Logger.GetLogger<TwainCloudClient>();
+        private static readonly Logger Logger = Logger.GetLogger<TwainCloudClient>();
 
         private static readonly JsonSerializerSettings JsonSettings;
         private static readonly JsonMediaTypeFormatter DefaultFormatter;
@@ -80,7 +80,12 @@ namespace HazyBits.Twain.Cloud.Client
         /// <returns>Deserialied payload of the response.</returns>
         public async Task<TResult> Post<TResult>(string endpoint, object body)
         {
-            return await ExecuteRequest<TResult>(() => _client.PostAsync(GetEndpointUrl(endpoint), body, DefaultFormatter));          
+            var request = new HttpRequestMessage(HttpMethod.Post, GetEndpointUrl(endpoint))
+            {
+                Content = body != null ? new ObjectContent(body.GetType(), body, DefaultFormatter) : null
+            };
+
+            return await ExecuteRequest<TResult>(() => SendRequest(request));
         }
 
         /// <summary>
@@ -91,7 +96,8 @@ namespace HazyBits.Twain.Cloud.Client
         /// <returns>Deserialied payload of the response.</returns>
         public async Task<TResult> Get<TResult>(string endpoint)
         {
-            return await ExecuteRequest<TResult>(() => _client.GetAsync(GetEndpointUrl(endpoint)));
+            var request = new HttpRequestMessage(HttpMethod.Get, GetEndpointUrl(endpoint));
+            return await ExecuteRequest<TResult>(() => SendRequest(request));
         }
 
         #endregion
@@ -132,7 +138,7 @@ namespace HazyBits.Twain.Cloud.Client
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Logger.LogInfo("Refreshing access tokens...");
-                    var refreshResponse = await _client.GetAsync(GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}"));
+                    var refreshResponse = await SendRequest(new HttpRequestMessage(HttpMethod.Get, GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}")));
                     var refreshBody = await ProcessResponseMessage(refreshResponse);
 
                     var tokens = DeserializeObject<TwainCloudTokens>(refreshBody);
@@ -163,14 +169,21 @@ namespace HazyBits.Twain.Cloud.Client
             OnTokensRefreshed(new TokensRefreshedEventArgs { Tokens = _tokens });
         }
 
+        private async Task<HttpResponseMessage> SendRequest(HttpRequestMessage request)
+        {
+            await ProcessRequestMessage(request);
+            return await _client.SendAsync(request);
+        }
+
+        private static async Task ProcessRequestMessage(HttpRequestMessage request)
+        {
+            var requestBody = request.Content != null ? await request.Content.ReadAsStringAsync() : null;
+            Logger.LogDebug($"Request: {request}{Environment.NewLine}{requestBody}");
+        }
+
         private static async Task<string> ProcessResponseMessage(HttpResponseMessage response)
         {
-            var request = response.RequestMessage;
-
-            var requestBody = request.Content != null ? await request.Content.ReadAsStringAsync() : null;
             var responseBody = response.Content != null ? await response.Content.ReadAsStringAsync() : null;
-
-            Logger.LogDebug($"Request: {request}{Environment.NewLine}{requestBody}");
             Logger.LogDebug($"Response: {response}{Environment.NewLine}{responseBody}");
 
             return responseBody;
