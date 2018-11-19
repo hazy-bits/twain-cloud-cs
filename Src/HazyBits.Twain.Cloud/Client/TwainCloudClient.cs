@@ -117,10 +117,9 @@ namespace HazyBits.Twain.Cloud.Client
             return Uri.IsWellFormedUriString(endpoint, UriKind.Absolute) ? endpoint : $"{_rootUrl}/{endpoint}";
         }
 
-        private static async Task<TResult> DeserializeObject<TResult>(HttpResponseMessage httpResponse)
+        private static TResult DeserializeObject<TResult>(string responseBody)
         {
-            var response = await httpResponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TResult>(response, JsonSettings);
+            return JsonConvert.DeserializeObject<TResult>(responseBody, JsonSettings);
         }
 
         private async Task<TResult> ExecuteRequest<TResult>(Func<Task<HttpResponseMessage>> request)
@@ -128,18 +127,23 @@ namespace HazyBits.Twain.Cloud.Client
             using (Logger.StartActivity("Executing TWAIN Cloud request"))
             {
                 var response = await request();
-                LogRequestMessage(response.RequestMessage);
-
+                var responseBody = await ProcessResponseMessage(response);
+                
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
+                    Logger.LogInfo("Refreshing access tokens...");
                     var refreshResponse = await _client.GetAsync(GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}"));
-                    var tokens = await DeserializeObject<TwainCloudTokens>(refreshResponse);
+                    var refreshBody = await ProcessResponseMessage(refreshResponse);
+
+                    var tokens = DeserializeObject<TwainCloudTokens>(refreshBody);
                     UpdateTokens(tokens);
+
+                    Logger.LogInfo("Repeat request with updated tokens...");
                     response = await request();
+                    responseBody = await ProcessResponseMessage(response);
                 }
 
-                LogResponseMessage(response);
-                return await DeserializeObject<TResult>(response);
+                return DeserializeObject<TResult>(responseBody);
             }
         }
 
@@ -159,14 +163,17 @@ namespace HazyBits.Twain.Cloud.Client
             OnTokensRefreshed(new TokensRefreshedEventArgs { Tokens = _tokens });
         }
 
-        private static void LogRequestMessage(HttpRequestMessage request)
+        private static async Task<string> ProcessResponseMessage(HttpResponseMessage response)
         {
-            Logger.LogDebug(request.ToString());
-        }
+            var request = response.RequestMessage;
 
-        private static void LogResponseMessage(HttpResponseMessage response)
-        {
-            Logger.LogDebug(response.ToString());
+            var requestBody = await request.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            Logger.LogDebug($"Request: {request}{Environment.NewLine}{requestBody}");
+            Logger.LogDebug($"Response: {response}{Environment.NewLine}{responseBody}");
+
+            return responseBody;
         }
 
         #endregion
