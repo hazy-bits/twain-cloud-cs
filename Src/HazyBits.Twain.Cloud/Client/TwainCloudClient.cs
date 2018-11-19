@@ -167,8 +167,8 @@ namespace HazyBits.Twain.Cloud.Client
         {
             var request = response.RequestMessage;
 
-            var requestBody = await request.Content.ReadAsStringAsync();
-            var responseBody = await response.Content.ReadAsStringAsync();
+            var requestBody = request.Content != null ? await request.Content.ReadAsStringAsync() : null;
+            var responseBody = response.Content != null ? await response.Content.ReadAsStringAsync() : null;
 
             Logger.LogDebug($"Request: {request}{Environment.NewLine}{requestBody}");
             Logger.LogDebug($"Response: {response}{Environment.NewLine}{responseBody}");
