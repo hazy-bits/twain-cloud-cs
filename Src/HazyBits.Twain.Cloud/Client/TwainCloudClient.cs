@@ -2,6 +2,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Telemetry;
 using Newtonsoft.Json;
@@ -80,9 +82,12 @@ namespace HazyBits.Twain.Cloud.Client
         /// <returns>Deserialied payload of the response.</returns>
         public async Task<TResult> Post<TResult>(string endpoint, object body)
         {
+            var binary = body as byte[];
             var request = new HttpRequestMessage(HttpMethod.Post, GetEndpointUrl(endpoint))
             {
-                Content = body != null ? new ObjectContent(body.GetType(), body, DefaultFormatter) : null
+                Content = body != null 
+                    ? binary != null ? CreateBinaryContent(binary) : CreateJsonContent(body)
+                    : null
             };
 
             return await ExecuteRequest<TResult>(() => SendRequest(request));
@@ -123,6 +128,19 @@ namespace HazyBits.Twain.Cloud.Client
             return Uri.IsWellFormedUriString(endpoint, UriKind.Absolute) ? endpoint : $"{_rootUrl}/{endpoint}";
         }
 
+        private static HttpContent CreateBinaryContent(byte[] binary)
+        {
+            return new ByteArrayContent(binary)
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue(MediaTypeNames.Application.Octet) }
+            };
+        }
+
+        private static HttpContent CreateJsonContent(object body)
+        {
+            return new ObjectContent(body.GetType(), body, DefaultFormatter);
+        }
+
         private static TResult DeserializeObject<TResult>(string responseBody)
         {
             return JsonConvert.DeserializeObject<TResult>(responseBody, JsonSettings);
@@ -133,23 +151,34 @@ namespace HazyBits.Twain.Cloud.Client
             using (Logger.StartActivity("Executing TWAIN Cloud request"))
             {
                 var response = await request();
-                var responseBody = await ProcessResponseMessage(response);
                 
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    Logger.LogInfo("Refreshing access tokens...");
-                    var refreshResponse = await SendRequest(new HttpRequestMessage(HttpMethod.Get, GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}")));
-                    var refreshBody = await ProcessResponseMessage(refreshResponse);
+                // json payload
+                if (response.Content.Headers.ContentType.MediaType.Contains("json"))
+                {                    
+                    var responseBody = await ProcessResponseMessage(response);
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        Logger.LogInfo("Refreshing access tokens...");
+                        var refreshResponse = await SendRequest(new HttpRequestMessage(HttpMethod.Get,
+                            GetEndpointUrl($"authentication/refresh/{_tokens?.RefreshToken}")));
+                        var refreshBody = await ProcessResponseMessage(refreshResponse);
 
-                    var tokens = DeserializeObject<TwainCloudTokens>(refreshBody);
-                    UpdateTokens(tokens);
+                        var tokens = DeserializeObject<TwainCloudTokens>(refreshBody);
+                        UpdateTokens(tokens);
 
-                    Logger.LogInfo("Repeat request with updated tokens...");
-                    response = await request();
-                    responseBody = await ProcessResponseMessage(response);
+                        Logger.LogInfo("Repeat request with updated tokens...");
+                        response = await request();
+                        responseBody = await ProcessResponseMessage(response);
+                    }
+
+                    return DeserializeObject<TResult>(responseBody);
                 }
-
-                return DeserializeObject<TResult>(responseBody);
+                // binary payload support
+                else
+                {
+                    var body = await response.Content.ReadAsByteArrayAsync();
+                    return (TResult) (object) body;
+                }
             }
         }
 

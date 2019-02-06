@@ -72,8 +72,7 @@ namespace HazyBits.Twain.Cloud.Device
         /// <returns>Unique ID of the object stored in the cloud.</returns>
         public async Task<string> UploadBlock(byte[] data)
         {
-            var base64 = Convert.ToBase64String(data);
-            return await _client.Post<string>($"scanners/{_scannerId}/blocks", base64);
+            return await _client.Post<string>($"scanners/{_scannerId}/blocks", data);
         }
 
         #endregion

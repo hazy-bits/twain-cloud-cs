@@ -89,8 +89,8 @@ namespace HazyBits.Twain.Cloud.Application
         /// <returns></returns>
         public async Task<byte[]> DownloadBlock(string scannerId, string blockId)
         {
-            var blockBase64 = await _client.Get<string>($"scanners/{scannerId}/blocks/{blockId}");
-            return Convert.FromBase64String(blockBase64);
+            var blockBytes = await _client.Get<byte[]>($"scanners/{scannerId}/blocks/{blockId}");
+            return blockBytes;
         }
 
         #endregion
