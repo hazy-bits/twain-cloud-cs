@@ -85,11 +85,11 @@ namespace HazyBits.Twain.Cloud.Application
         /// Downloads the block.
         /// </summary>
         /// <param name="scannerId">The scanner identifier.</param>
-        /// <param name="blockId">The block identifier.</param>
+        /// <param name="blockUrl">The block URL.</param>
         /// <returns></returns>
-        public async Task<byte[]> DownloadBlock(string scannerId, string blockId)
+        public async Task<byte[]> DownloadBlock(string blockUrl)
         {
-            var blockBytes = await _client.Get<byte[]>($"scanners/{scannerId}/blocks/{blockId}");
+            var blockBytes = await _client.Get<byte[]>(blockUrl);
             return blockBytes;
         }
 
