@@ -46,6 +46,9 @@ namespace HazyBits.Twain.Cloud.Client
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             DefaultFormatter = new JsonMediaTypeFormatter { SerializerSettings = JsonSettings };
+
+            // Enabled TLS 1.2
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
 
 
