@@ -86,14 +86,15 @@ namespace HazyBits.Twain.Cloud.Client
         public async Task<TResult> Post<TResult>(string endpoint, object body)
         {
             var binary = body as byte[];
-            var request = new HttpRequestMessage(HttpMethod.Post, GetEndpointUrl(endpoint))
-            {
-                Content = body != null 
-                    ? binary != null ? CreateBinaryContent(binary) : CreateJsonContent(body)
-                    : null
-            };
+            var content = body != null
+                ? binary != null ? CreateBinaryContent(binary) : CreateJsonContent(body)
+                : null;
 
-            return await ExecuteRequest<TResult>(() => SendRequest(request));
+            return await ExecuteRequest<TResult>(() =>
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, GetEndpointUrl(endpoint)) { Content = content };
+                return SendRequest(request);
+            });
         }
 
         /// <summary>
@@ -104,8 +105,11 @@ namespace HazyBits.Twain.Cloud.Client
         /// <returns>Deserialied payload of the response.</returns>
         public async Task<TResult> Get<TResult>(string endpoint)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, GetEndpointUrl(endpoint));
-            return await ExecuteRequest<TResult>(() => SendRequest(request));
+            return await ExecuteRequest<TResult>(() =>
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, GetEndpointUrl(endpoint));
+                return SendRequest(request);
+            });
         }
 
         #endregion
