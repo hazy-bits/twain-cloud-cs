@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using HazyBits.Twain.Cloud.Telemetry;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Client.Options;
 using MQTTnet.Diagnostics;
 
 namespace HazyBits.Twain.Cloud.Events
@@ -19,11 +18,12 @@ namespace HazyBits.Twain.Cloud.Events
     {
         #region Private Fields
 
-        private static Logger Logger = Logger.GetLogger<MqttClient>();
+        private static readonly Logger Logger = Logger.GetLogger<MqttClient>();
         private static readonly Encoding DefaultMessageEncoding = Encoding.UTF8;
 
         private readonly IMqttClient _client;
         private readonly IMqttClientOptions _options;
+        private static readonly MqttNetLogger _logger;
 
         #endregion
 
@@ -35,13 +35,14 @@ namespace HazyBits.Twain.Cloud.Events
         static MqttClient()
         {
             #if DEBUG
+            _logger = new MqttNetLogger();
 
             // Write all trace messages to the console window.
-            MqttNetGlobalLogger.LogMessagePublished += (s, e) =>
+            _logger.LogMessagePublished += (s, e) =>
             {
-                var trace = $">> [{e.TraceMessage.Timestamp:O}] [{e.TraceMessage.ThreadId}] [{e.TraceMessage.Source}] [{e.TraceMessage.Level}]: {e.TraceMessage.Message}";
-                if (e.TraceMessage.Exception != null)
-                    trace += Environment.NewLine + e.TraceMessage.Exception.ToString();
+                var trace = $">> [{e.LogMessage.Timestamp:O}] [{e.LogMessage.ThreadId}] [{e.LogMessage.Source}] [{e.LogMessage.Level}]: {e.LogMessage.Message}";
+                if (e.LogMessage.Exception != null)
+                    trace += Environment.NewLine + e.LogMessage.Exception.ToString();
 
                 Debug.WriteLine(trace);
                 Logger.LogDebug(trace);
@@ -57,7 +58,7 @@ namespace HazyBits.Twain.Cloud.Events
         public MqttClient(string mqttUrl)
         {
             // Create a new MQTT client.
-            var factory = new MqttFactory();
+            var factory = new MqttFactory(_logger);
             _client = factory.CreateMqttClient();
 
             // Use WebSocket connection.
@@ -66,8 +67,7 @@ namespace HazyBits.Twain.Cloud.Events
                 .WithTls()
                 .WithClientId("twain-direct-proxy-" + Guid.NewGuid()) // TODO: define this constant somewhere
                 .Build();
-
-            _client.ApplicationMessageReceived += MqttMessagePublishReceived;
+            _client.UseApplicationMessageReceivedHandler(MqttMessagePublishReceived);
         }
 
         #endregion
@@ -86,9 +86,9 @@ namespace HazyBits.Twain.Cloud.Events
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public async void Dispose()
+        public void Dispose()
         {
-            await _client.DisconnectAsync();
+            _client.Dispose();
         }
 
         /// <summary>
@@ -97,12 +97,12 @@ namespace HazyBits.Twain.Cloud.Events
         /// <returns></returns>
         public async Task Connect()
         {
-            _client.Disconnected += async (s, e) =>
+            _client.UseDisconnectedHandler(async e =>
             {
                 Logger.LogDebug("Disconnected from server");
 
                 // TODO: implement exponential backoff instead.
-                await Task.Delay(TimeSpan.FromSeconds(2)); 
+                await Task.Delay(TimeSpan.FromSeconds(2));
 
                 try
                 {
@@ -112,7 +112,7 @@ namespace HazyBits.Twain.Cloud.Events
                 {
                     Logger.LogDebug("Reconnection failed");
                 }
-            };
+            });
 
             await ConnectMqttBroker();
         }
@@ -128,7 +128,7 @@ namespace HazyBits.Twain.Cloud.Events
             {
                 // '#' is the wildcard to subscribe to anything under the 'root' topic
                 // the QOS level here - I only partially understand why it has to be this level - it didn't seem to work at anything else.
-                await _client.SubscribeAsync(new TopicFilterBuilder().WithTopic(topic).Build());
+                await _client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
             }
         }
 
@@ -176,21 +176,17 @@ namespace HazyBits.Twain.Cloud.Events
         {
             using (Logger.StartActivity("Connecting to broker"))
             {
-                // A wild hack to ensure that HTTP connection is not closed.
-                // See https://github.com/chkr1011/MQTTnet/issues/158 for details
-
-                var defaultIdleTime = ServicePointManager.MaxServicePointIdleTime;
-                ServicePointManager.MaxServicePointIdleTime = Timeout.Infinite;
                 await _client.ConnectAsync(_options);
-                ServicePointManager.MaxServicePointIdleTime = defaultIdleTime;
             }
         }
 
-        private void MqttMessagePublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
+        private async Task MqttMessagePublishReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             OnMessageReceived(new MqttMessage { Topic = e.ApplicationMessage.Topic, Message = DefaultMessageEncoding.GetString(e.ApplicationMessage.Payload) });
+
+            await Task.FromResult(0);
         }
 
-        #endregion        
+        #endregion
     }
 }
