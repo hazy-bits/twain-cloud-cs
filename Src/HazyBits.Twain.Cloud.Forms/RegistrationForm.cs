@@ -8,6 +8,9 @@ namespace HazyBits.Twain.Cloud.Forms
 {
     public partial class RegistrationForm : Form
     {
+        private Timer pollingTimer = null;
+        private readonly object objectLockTimer = new object();
+
         public RegistrationForm(RegistrationManager manager, RegistrationResponse registrationResponse)
         {
             InitializeComponent();
@@ -15,8 +18,12 @@ namespace HazyBits.Twain.Cloud.Forms
             registrationUrlLabel.Text = registrationResponse.InviteUrl;
             registrationTokenTextBox.Text = registrationResponse.RegistrationToken;
 
+            StartPooling(manager, registrationResponse);
+        }
+
+        private void StartPooling(RegistrationManager manager, RegistrationResponse registrationResponse)
+        {
             int pollingCounter = 0;
-            Timer pollingTimer = null;
             pollingTimer = new Timer(state =>
             {
                 pollingCounter++;
@@ -24,20 +31,37 @@ namespace HazyBits.Twain.Cloud.Forms
 
                 if (pollResult.Success)
                 {
-                    pollingTimer.Dispose();
+                    StopPooling();
 
                     PollResponse = pollResult;
                     ShowSuccessResult();
                 }
-                else
+                else if (pollingCounter > 120) // 10 minutes
                 {
-                    if (pollingCounter > 120) // 10 minutes
-                    {
-                        pollingTimer.Dispose();
-                        ShowFailureResult();
-                    }
+                    StopPooling();
+
+                    ShowFailureResult();
                 }
             }, null, 0, 5000);
+        }
+
+        private void StopPooling()
+        {
+            lock (objectLockTimer)
+            {
+                if (pollingTimer != null)
+                {
+                    pollingTimer.Dispose();
+                    pollingTimer = null;
+                }
+            }
+        }
+
+        public new void Dispose()
+        {
+            StopPooling();
+
+            base.Dispose();
         }
 
         public PollResponse PollResponse { get; set; }
