@@ -91,6 +91,7 @@ namespace HazyBits.Twain.Cloud.Events
         public void Dispose()
         {
             _client.Dispose();
+            _topicsSubscription.Clear();
         }
 
         /// <summary>
