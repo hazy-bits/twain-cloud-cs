@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace HazyBits.Twain.Cloud.Events
         private readonly IMqttClient _client;
         private readonly IMqttClientOptions _options;
         private static readonly MqttNetLogger _logger;
+        private List<string> _topicsSubscription = new List<string>();
 
         #endregion
 
@@ -107,6 +109,16 @@ namespace HazyBits.Twain.Cloud.Events
                 try
                 {
                     await ConnectMqttBroker();
+
+                    // The topic subscriptions are made again when the mqtt server reconnection is stablished
+                    // (for example, it has to be done when the mqtt server is restarted)
+                    if (_topicsSubscription.Count > 0)
+                    {
+                        foreach(string topic in _topicsSubscription)
+                        {
+                            await Subscribe(topic);
+                        }
+                    }
                 }
                 catch
                 {
@@ -129,6 +141,8 @@ namespace HazyBits.Twain.Cloud.Events
                 // '#' is the wildcard to subscribe to anything under the 'root' topic
                 // the QOS level here - I only partially understand why it has to be this level - it didn't seem to work at anything else.
                 await _client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
+                // The topic subscription is made again when the mqtt server reconnection is stablished
+                _topicsSubscription.Add(topic);
             }
         }
 
