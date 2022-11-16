@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net452;net46</TargetFrameworks>
@@ -33,14 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="FacebookLoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="FacebookLoginForm.Designer.cs">
-      <DependentUpon>FacebookLoginForm.cs</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="RegistrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,10 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="FacebookLoginForm.resx">
-      <DependentUpon>FacebookLoginForm.cs</DependentUpon>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>

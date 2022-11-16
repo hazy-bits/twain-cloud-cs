@@ -1,0 +1,658 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HazyBits.Twain.Cloud</name>
+    </assembly>
+    <members>
+        <member name="T:HazyBits.Twain.Cloud.Application.ApplicationManager">
+            <summary>
+            Class that handles connection to TWAIN Cloud infrastructure from application side.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Application.ApplicationManager.#ctor(HazyBits.Twain.Cloud.Client.TwainCloudClient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Application.ApplicationManager"/> class.
+            </summary>
+            <param name="client">Initialized TWAIN Cloud client.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Application.ApplicationManager.GetScanners">
+            <summary>
+            Gets the list of scanners registered in the TWAIN Cloud.
+            </summary>
+            <returns>List of scanners registered for the current user.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Application.ApplicationManager.GetScannerInfo(System.String)">
+            <summary>
+            Gets the scanner information for specified scanner ID.
+            </summary>
+            <param name="scannerId">The scanner identifier.</param>
+            <returns>Scanner information for specified scanner ID.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Application.ApplicationManager.SendCommand(System.String,System.String)">
+            <summary>
+            Sends the command to the specified scanner.
+            </summary>
+            <param name="scannerId">The scanner identifier.</param>
+            <param name="command">The command.</param>
+            <returns></returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Application.ApplicationManager.DownloadBlock(System.String)">
+            <summary>
+            Downloads the block.
+            </summary>
+            <param name="scannerId">The scanner identifier.</param>
+            <param name="blockUrl">The block URL.</param>
+            <returns></returns>
+        </member>
+        <member name="E:HazyBits.Twain.Cloud.Client.EventBrokerClient.Received">
+            <summary>
+            Occurs when asynchronious message from TWAIN Cloud is received.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.EventBrokerClient.Send(System.String,System.String)">
+            <summary>
+            Sends the specified message to the TWAIN Cloud.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">If the session is in disconnected state.</exception>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.EventBrokerClient.OnReceived(System.String)">
+            <summary>
+            Raises the <see cref="E:HazyBits.Twain.Cloud.Client.EventBrokerClient.Received" /> event.
+            </summary>
+            <param name="message">The received message.</param>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Client.TokensRefreshedEventArgs">
+            <summary>
+            Event payload for <see cref="E:HazyBits.Twain.Cloud.Client.TwainCloudClient.TokensRefreshed"/> event.
+            </summary>
+            <seealso cref="T:System.EventArgs" />
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Client.TokensRefreshedEventArgs.Tokens">
+            <summary>
+            Gets or sets the updated TWAIN Cloud tokens.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Client.TwainCloudClient">
+            <summary>
+            Low level TWAIN Cloud client that handles connection to the infrastructure.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudClient.#cctor">
+            <summary>
+            Initializes the <see cref="T:HazyBits.Twain.Cloud.Client.TwainCloudClient"/> class.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudClient.#ctor(System.String,HazyBits.Twain.Cloud.Client.TwainCloudTokens)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Client.TwainCloudClient"/> class.
+            </summary>
+            <param name="rootUrl">The root TWAIN Cloud API URL.</param>
+            <param name="tokens">TWAIN Cloud access tokens.</param>
+        </member>
+        <member name="E:HazyBits.Twain.Cloud.Client.TwainCloudClient.TokensRefreshed">
+            <summary>
+            Occurs when TWAIN Cloud access tokens are refreshed.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudClient.Post``1(System.String,System.Object)">
+            <summary>
+            Sends POST request to the specified endpoint.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="endpoint">Request endpoint (either absolute or relative to the root URL).</param>
+            <param name="body">Payload for the request to send.</param>
+            <returns>Deserialied payload of the response.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudClient.Get``1(System.String)">
+            <summary>
+            Sends GET request to the specified endpoint.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="endpoint">Request endpoint (either absolute or relative to the root URL).</param>
+            <returns>Deserialied payload of the response.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudClient.OnTokensRefreshed(HazyBits.Twain.Cloud.Client.TokensRefreshedEventArgs)">
+            <summary>
+            Raises the <see cref="E:HazyBits.Twain.Cloud.Client.TwainCloudClient.TokensRefreshed" /> event.
+            </summary>
+            <param name="args">The <see cref="T:HazyBits.Twain.Cloud.Client.TokensRefreshedEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Client.TwainCloudTokens">
+            <summary>
+            A set of tokens required to access TWAIN Cloud infrastructure.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Client.TwainCloudTokens.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Client.TwainCloudTokens"/> class.
+            </summary>
+            <param name="authorizationToken">The authorization token.</param>
+            <param name="refreshToken">The refresh token.</param>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Client.TwainCloudTokens.AuthorizationToken">
+            <summary>
+            Gets or sets authorization token which should be passed along with each TWAIN Cloud request.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Client.TwainCloudTokens.RefreshToken">
+            <summary>
+            Gets or sets refresh token that can be used to retrieve new authorization token, when the old one expires.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Device.DeviceSession">
+            <summary>
+            Class that handles connection to TWAIN Cloud infrastructure from device side of things.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Device.DeviceSession.#ctor(HazyBits.Twain.Cloud.Client.TwainCloudClient,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Device.DeviceSession"/> class.
+            </summary>
+            <param name="client">Initialized TWAIN Cloud client.</param>
+            <param name="scannerId">Scanner Id.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Device.DeviceSession.Connect">
+            <summary>
+            Connects specified scanner to TWAIN Cloud infrastructure.
+            </summary>
+            <param name="scannerId">The scanner identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Device.DeviceSession.Send(System.String)">
+            <summary>
+            Sends the specified message to the TWAIN Cloud.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">If the session is in disconnected state.</exception>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Device.DeviceSession.UploadBlock(System.Byte[])">
+            <summary>
+            Uploads the specified data to the TWAIN Cloud.
+            </summary>
+            <param name="data">The data to upload.</param>
+            <returns>Unique ID of the object stored in the cloud.</returns>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Device.ScannerStatusResponse">
+            <summary>
+            Scanner status response payload.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Device.ScannerStatusResponse.Url">
+            <summary>
+            Gets or sets the URL to use to connect to TWAIN Cloud MQTT broker.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Device.ScannerStatusResponse.RequestTopic">
+            <summary>
+            Gets or sets the name of MQTT topic to use for incoming messages.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Device.ScannerStatusResponse.ResponseTopic">
+            <summary>
+            Gets or sets the name of MQTT topic to use for outgoing messages.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Events.MqttClient">
+            <summary>
+            TWAIN Cloud MQTT client.
+            </summary>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.#cctor">
+            <summary>
+            Initializes the <see cref="T:HazyBits.Twain.Cloud.Events.MqttClient"/> class.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Events.MqttClient"/> class.
+            </summary>
+            <param name="mqttUrl">The MQTT broker URL.</param>
+        </member>
+        <member name="E:HazyBits.Twain.Cloud.Events.MqttClient.MessageReceived">
+            <summary>
+            Occurs when new message from MQTT broker is received.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.Connect">
+            <summary>
+            Connects to MQTT broker.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.Subscribe(System.String)">
+            <summary>
+            Subscribes to the specified topic.
+            </summary>
+            <param name="topic">The topic.</param>
+            <returns></returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.Publish(System.String,System.String)">
+            <summary>
+            Publishes a message to the specified topic.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Events.MqttClient.OnMessageReceived(HazyBits.Twain.Cloud.Events.MqttMessage)">
+            <summary>
+            Raises the <see cref="E:HazyBits.Twain.Cloud.Events.MqttClient.MessageReceived" /> event.
+            </summary>
+            <param name="message">Message payload.</param>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Events.MqttMessage">
+            <summary>
+            MQTT message properties.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Events.MqttMessage.Topic">
+            <summary>
+            Gets or sets the MQTT topic for the message.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Events.MqttMessage.Message">
+            <summary>
+            Gets or sets the message text.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Registration.PollResponse">
+            <summary>
+            Poll response payload.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.PollResponse.Success">
+            <summary>
+            Gets or sets a value indicating whether registration was successfully completed by user.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.PollResponse.Message">
+            <summary>
+            Gets or sets the error message if registration is not successfull.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.PollResponse.AuthorizationToken">
+            <summary>
+            Gets or sets device authorization token in case of successfull registration.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.PollResponse.RefreshToken">
+            <summary>
+            Gets or sets device refresh token in case of successfull registration.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Registration.RegistrationManager">
+            <summary>
+            Class that handles device registration with TWAIN Cloud infrastructure.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Registration.RegistrationManager.#ctor(HazyBits.Twain.Cloud.Client.TwainCloudClient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Registration.RegistrationManager"/> class.
+            </summary>
+            <param name="client">Initialized TWAIN Cloud client.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Registration.RegistrationManager.Register(HazyBits.Twain.Cloud.Registration.RegistrationRequest)">
+            <summary>
+            Initiates registration sequence for specified device.
+            </summary>
+            <param name="request">The device information to register.</param>
+            <returns>Registration response.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Registration.RegistrationManager.Poll(System.String)">
+            <summary>
+            Polls TWAIN Cloud infrastucture for registration completion.
+            </summary>
+            <param name="pollUrl">The poll URL.</param>
+            <returns>Polling reponse.</returns>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Registration.RegistrationRequest">
+            <summary>
+            Scanner registration request.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.Name">
+            <summary>
+            Gets or sets the name of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.Description">
+            <summary>
+            Gets or sets the description of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.Type">
+            <summary>
+            Gets or sets the type of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.Manufacturer">
+            <summary>
+            Gets or sets the manufacturer of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.Model">
+            <summary>
+            Gets or sets the model of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationRequest.SerialNumber">
+            <summary>
+            Gets or sets the serial number.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Registration.RegistrationResponse">
+            <summary>
+            Registration reponse payload.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationResponse.ScannerId">
+            <summary>
+            Gets or sets unique scanner identifier, assigned to the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationResponse.RegistrationToken">
+            <summary>
+            Gets or sets the registration token that should be used to complete the registration.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationResponse.PollingUrl">
+            <summary>
+            Gets or sets the polling URL to retrieve registration status.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.RegistrationResponse.InviteUrl">
+            <summary>
+            Gets or sets the invite URL to be used to complete registration process.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Registration.ScannerInformation">
+            <summary>
+            Scanner information fields.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Id">
+            <summary>
+            Gets or sets the identifier of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Name">
+            <summary>
+            Gets or sets the name of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Description">
+            <summary>
+            Gets or sets the description of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Type">
+            <summary>
+            Gets or sets the type of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Version">
+            <summary>
+            Gets or sets the version of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Manufacturer">
+            <summary>
+            Gets or sets the manufacturer of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Model">
+            <summary>
+            Gets or sets the model of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.Firmware">
+            <summary>
+            Gets or sets the firmware of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.device_state">
+            <summary>
+            Gets or sets the state of the device.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.connection_state">
+            <summary>
+            Gets or sets the state of the connection.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.serial_number">
+            <summary>
+            Gets or sets the serial number.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.setup_url">
+            <summary>
+            Gets or sets the setup URL.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.support_url">
+            <summary>
+            Gets or sets the support URL.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.update_url">
+            <summary>
+            Gets or sets the update URL.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.semantic_state">
+            <summary>
+            Gets or sets the state of the semantic.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.ScannerInformation.uptime">
+            <summary>
+            Gets or sets the uptime.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Registration.SignInInformation.Url">
+            <summary>
+            Gets url address for signing
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Telemetry.ActivityScope">
+            <summary>
+            Activity scope is a named region that marks start and end of an operation.
+            </summary>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.ActivityScope.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Telemetry.ActivityScope"/> class.
+            </summary>
+            <param name="name">The name of the scope.</param>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Telemetry.ActivityScope.Empty">
+            <summary>
+            Gets the empty activity scope.
+            </summary>
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Telemetry.ActivityScope.ActivityName">
+            <summary>
+            Gets name of the current activity.
+            </summary>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter">
+            <summary>
+            Logger adapter for standard .NET TraceSource logger.
+            </summary>
+            <seealso cref="T:HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter" />
+        </member>
+        <member name="P:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter.Source">
+            <summary>
+            Gets trace source that is used to write messages to.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter"/> class.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter.StartActivity(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,System.String)">
+            <inheritdocs />
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter.LogMessage(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,HazyBits.Twain.Cloud.Telemetry.LogLevel,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <inheritdocs />
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Adapters.TraceSourceLoggerAdapter.LogException(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,HazyBits.Twain.Cloud.Telemetry.LogLevel,System.Exception,System.String)">
+            <inheritdocs />
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter">
+            <summary>
+            Base interface for logger adapters.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter.StartActivity(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,System.String)">
+            <summary>
+            Starts new logger activity with specified name.
+            </summary>
+            <param name="context">Current telemetry context.</param>
+            <param name="name">Name of the activity.</param>
+            <returns>New <see cref="T:HazyBits.Twain.Cloud.Telemetry.ActivityScope"/> instance.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter.LogMessage(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,HazyBits.Twain.Cloud.Telemetry.LogLevel,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Logs message with provided level and optional additional properties.
+            </summary>
+            <param name="context">Current telemetry context.</param>
+            <param name="level">Level of the log entry.</param>
+            <param name="message">Log message.</param>
+            <param name="props">Additional properties to include into log entry.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter.LogException(HazyBits.Twain.Cloud.Telemetry.TelemetryContext,HazyBits.Twain.Cloud.Telemetry.LogLevel,System.Exception,System.String)">
+            <summary>
+            Logs exception with provided level.
+            </summary>
+            <param name="context">Current telemetry context.</param>
+            <param name="level">Level of the log entry.</param>
+            <param name="ex">Exception instance to put into logs.</param>
+            <param name="message">Log message.</param>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Telemetry.Logger">
+            <summary>
+            Main Logger adapter for BankingOn product.
+            </summary>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Telemetry.Logger"/> class.
+            </summary>
+            <param name="context">Type context for this logger instance.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.GetLogger``1">
+            <summary>
+            Fabric method that returns new instance of the logger initialized 
+            with context of the specified type.
+            </summary>
+            <typeparam name="T">
+            Context of the logger.
+            </typeparam>
+            <returns>Configured instance of the logger.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.GetLogger``1(System.Collections.Generic.IEnumerable{HazyBits.Twain.Cloud.Telemetry.ILoggerAdapter})">
+            <summary>
+            Fabric method that returns new instance of the logger initialized 
+            with context of the specified type and adapters to use for log entries.
+            </summary>
+            <typeparam name="T">
+            Context of the logger.
+            </typeparam>
+            <returns>Configured instance of the logger.</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.StartActivity(System.String)">
+            <summary>
+            Convenient method that returns new activity scope with specified name.
+            </summary>
+            <example>
+            <code>
+            Logger log = ...
+            using(log.StartActivity("Some Interesting Activity"))
+            { 
+               // ...
+            }
+            </code>
+            </example>
+            <param name="activityName">New activity name.</param>
+            <returns>Activity scope</returns>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.LogCritical(System.String)">
+            <summary>
+            Writes an critical message to the log using specified message.
+            </summary>
+            <param name="message">The informative message to write.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.LogError(System.String)">
+            <summary>
+            Writes an error message to the log using specified message.
+            </summary>
+            <param name="message">The informative message to write.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.LogWarning(System.String)">
+            <summary>
+            Writes a warning message to the log using specified message.
+            </summary>
+            <param name="message">The informative message to write.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.LogInfo(System.String)">
+            <summary>
+            Writes an informational message to the log using specified message.
+            </summary>
+            <param name="message">The informative message to write.</param>
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Telemetry.Logger.LogDebug(System.String)">
+            <summary>
+            Writes a verbose message to the log using specified message.
+            </summary>
+            <param name="message">The informative message to write.</param>
+        </member>
+        <member name="T:HazyBits.Twain.Cloud.Telemetry.LogLevel">
+            <summary>
+            Identifies the type of event that has caused the trace.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Off">
+            <summary>
+            Disabled logging.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Critical">
+            <summary>
+            Fatal error or application crash.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Error">
+            <summary>
+            Recoverable error.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Warning">
+            <summary>
+            Noncritical problem.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Info">
+            <summary>
+            Informational message.
+            </summary>
+        </member>
+        <member name="F:HazyBits.Twain.Cloud.Telemetry.LogLevel.Debug">
+            <summary>
+            Debugging trace.
+            </summary>
+        </member>
+    </members>
+</doc>

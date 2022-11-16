@@ -51,6 +51,11 @@ namespace HazyBits.Twain.Cloud.Application
             return await _client.Get<UserInformation>("user");
         }
 
+        public async Task<SignInInformation> GetSignin()
+        {
+            return await _client.Get<SignInInformation>("signin");
+        }
+
         /// <summary>
         /// Gets the list of scanners registered in the TWAIN Cloud.
         /// </summary>

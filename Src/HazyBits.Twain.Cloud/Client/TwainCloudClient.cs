@@ -83,7 +83,7 @@ namespace HazyBits.Twain.Cloud.Client
         /// <param name="endpoint">Request endpoint (either absolute or relative to the root URL).</param>
         /// <param name="body">Payload for the request to send.</param>
         /// <returns>Deserialied payload of the response.</returns>
-        public async Task<TResult> Post<TResult>(string endpoint, object body)
+        public async Task<TResult> Post<TResult>(string endpoint, object body = null)
         {
             var binary = body as byte[];
             var content = body != null

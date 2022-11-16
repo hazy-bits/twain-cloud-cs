@@ -60,7 +60,11 @@ namespace HazyBits.Twain.Cloud.Events
         public MqttClient(string mqttUrl)
         {
             // Create a new MQTT client.
+#if DEBUG
             var factory = new MqttFactory(_logger);
+#else
+            var factory = new MqttFactory();
+#endif
             _client = factory.CreateMqttClient();
 
             // Use WebSocket connection.
@@ -72,18 +76,18 @@ namespace HazyBits.Twain.Cloud.Events
             _client.UseApplicationMessageReceivedHandler(MqttMessagePublishReceived);
         }
 
-        #endregion
+#endregion
 
-        #region Public Events
+#region Public Events
 
         /// <summary>
         /// Occurs when new message from MQTT broker is received.
         /// </summary>
         public event EventHandler<MqttMessage> MessageReceived;
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -166,9 +170,9 @@ namespace HazyBits.Twain.Cloud.Events
             }
         }
 
-        #endregion
+#endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Raises the <see cref="MessageReceived" /> event.
@@ -183,9 +187,9 @@ namespace HazyBits.Twain.Cloud.Events
             }
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
         private async Task ConnectMqttBroker()
         {
@@ -202,6 +206,6 @@ namespace HazyBits.Twain.Cloud.Events
             await Task.FromResult(0);
         }
 
-        #endregion
+#endregion
     }
 }

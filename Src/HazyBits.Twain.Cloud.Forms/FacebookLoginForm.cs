@@ -13,6 +13,7 @@ namespace HazyBits.Twain.Cloud.Forms
     public partial class FacebookLoginForm : Form
     {
         private const string AuthorizationTokenName = "authorization_token";
+        private WebBrowser webBrowser;
         private const string RefreshTokenName = "refresh_token";
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace HazyBits.Twain.Cloud.Forms
         /// <summary>
         /// Occurs when TWAIN Cloud successfully authorized the user and issued access tokens.
         /// </summary>
-        public event EventHandler<TwainCloudAuthorizedEventArgs> Authorized; 
+        public event EventHandler<TwainCloudAuthorizedEventArgs> Authorized;
 
         private void webBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
@@ -48,6 +49,42 @@ namespace HazyBits.Twain.Cloud.Forms
         protected virtual void OnAuthorized(TwainCloudAuthorizedEventArgs e)
         {
             Authorized?.Invoke(this, e);
+        }
+
+        private void InitializeComponent()
+        {
+            this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.SuspendLayout();
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(778, 667);
+            this.webBrowser.TabIndex = 0;
+            this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser_DocumentCompleted);
+            this.webBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.webBrowser_Navigated);
+            // 
+            // FacebookLoginForm
+            // 
+            this.ClientSize = new System.Drawing.Size(778, 667);
+            this.Controls.Add(this.webBrowser);
+            this.Name = "FacebookLoginForm";
+            this.Load += new System.EventHandler(this.FacebookLoginForm_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void FacebookLoginForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
         }
     }
 

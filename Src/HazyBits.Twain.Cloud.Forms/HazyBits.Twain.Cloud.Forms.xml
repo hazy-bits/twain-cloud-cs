@@ -4,22 +4,33 @@
         <name>HazyBits.Twain.Cloud.Forms</name>
     </assembly>
     <members>
+        <member name="T:HazyBits.Twain.Cloud.Forms.FacebookLoginForm">
+            <summary>
+            Simple form that simplifies Facebook Authentication process.
+            </summary>
+            <seealso cref="T:System.Windows.Forms.Form" />
+        </member>
+        <member name="M:HazyBits.Twain.Cloud.Forms.FacebookLoginForm.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HazyBits.Twain.Cloud.Forms.FacebookLoginForm"/> class.
+            </summary>
+            <param name="loginUrl">The login URL.</param>
+        </member>
+        <member name="E:HazyBits.Twain.Cloud.Forms.FacebookLoginForm.Authorized">
+            <summary>
+            Occurs when TWAIN Cloud successfully authorized the user and issued access tokens.
+            </summary>
+        </member>
         <member name="F:HazyBits.Twain.Cloud.Forms.FacebookLoginForm.components">
             <summary>
             Required designer variable.
             </summary>
         </member>
         <member name="M:HazyBits.Twain.Cloud.Forms.FacebookLoginForm.Dispose(System.Boolean)">
-            <summary>
+            <summary> 
             Clean up any resources being used.
             </summary>
             <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:HazyBits.Twain.Cloud.Forms.FacebookLoginForm.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
         </member>
         <member name="T:HazyBits.Twain.Cloud.Forms.Properties.Resources">
             <summary>
